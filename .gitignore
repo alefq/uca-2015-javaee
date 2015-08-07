@@ -1,0 +1,16 @@
+.vagrant
+.project
+.idea
+.settings
+.myumldata
+target
+src/main/webapp/frontend/libs
+liquibase.properties
+db/temp
+runMaven.sh
+# MyEclipse garbage stuff
+.classpath
+.mymetadata
+src/main/webapp/META-INF
+.externalToolBuilders/
+*.iml

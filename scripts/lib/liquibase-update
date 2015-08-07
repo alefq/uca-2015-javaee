@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "[LIQUIBASE] Update"
+scripts/lib/mvn liquibase:update

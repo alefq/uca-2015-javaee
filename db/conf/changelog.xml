@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Parameters table -->
+    <changeSet author="afeltes" id="1">
+        <createTable tableName="parameters">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="parameters_pkey"/>
+            </column>
+            <column defaultValueBoolean="true" name="active" type="bool">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="label" type="VARCHAR(255)"/>
+            <column name="type" type="int4"/>
+            <column name="value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Unexpected errors table -->
+    <changeSet author="afeltes" id="2">
+        <createTable remarks="Stores errors that happened on the system for later analysis"
+
+                     tableName="unexpected_errors">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="uncaught_exceptions_pkey"/>
+            </column>
+            <column name="error_type"
+                    remarks="This columns match an enumeration on the JPA layer for a couple of enums. The idea is to use types such as&#10;&#10;JAVA_EX -- an unexpected exception caugh by the global exception handler&#10;CUSTOM_USER -- a custom userCurrentInfo error. This can be used in defensive programming mode&#10;"
+                    type="VARCHAR(25)"/>
+            <column name="exception_type" type="VARCHAR(250)"/>
+            <column defaultValueComputed="now()" name="insert_time" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offending_class" type="VARCHAR(250)"/>
+            <column name="url" type="VARCHAR(250)"/>
+            <column name="user_agent" type="VARCHAR(250)"/>
+            <column name="user_id" type="int8"/>
+            <column name="stack_trace" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Mail queue table -->
+    <changeSet author="afeltes" id="3">
+        <createTable tableName="mail_queue">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="mail_queue_pkey"/>
+            </column>
+            <column name="subject" type="VARCHAR(150)"/>
+            <column name="body" type="TEXT"/>
+            <column name="to_mail" type="VARCHAR(255)"/>
+            <column name="from_mail" type="VARCHAR(255)"/>
+            <column name="status_mail" type="VARCHAR(50)"/>
+            <column name="notification_type" type="VARCHAR(50)"/>
+            <column name="insert_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="complete_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_error" type="TEXT"/>
+            <column name="send_retries" type="int2"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Users table -->
+    <changeSet author="afeltes" id="4">
+        <createTable tableName="users">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+            </column>
+            <column name="mail" type="VARCHAR(500)"/>
+            <column name="name" type="VARCHAR(250)"/>
+            <column name="lastname" type="VARCHAR(250)"/>
+            <column name="password" type="VARCHAR(250)"/>
+            <column name="state" type="VARCHAR(50)"/>
+            <column name="role" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="afeltes" id="5">
+        <addUniqueConstraint
+                columnNames="mail"
+                constraintName="const_user_mail"
+                tableName="users"/>
+    </changeSet>
+
+</databaseChangeLog>

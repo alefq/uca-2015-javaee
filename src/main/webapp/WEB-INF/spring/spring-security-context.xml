@@ -1,0 +1,34 @@
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Enable annotation-based security in the application -->
+    <global-method-security secured-annotations="enabled">
+    </global-method-security>
+
+    <!-- This is required for the Auth beans being able to use the bean services -->
+    <beans:import resource="spring-business-context.xml"/>
+    <!-- Scan for security beans in the security package -->
+    <context:component-scan base-package="py.edu.uca.test.security"/>
+
+    <http pattern="/api/**" security="none"/>
+
+    <!-- HTTP basic authentication in Spring Security -->
+    <http realm="uca-spring-test" use-expressions="true">
+        <intercept-url pattern="/no-api/users/**" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+        <http-basic />
+    </http>
+    <authentication-manager>
+        <authentication-provider ref="mainAuthProvider"/>
+    </authentication-manager>
+
+    <beans:bean id="mainAuthProvider" class="py.edu.uca.test.security.MainAuthenticationProvider"/>
+
+</beans:beans>

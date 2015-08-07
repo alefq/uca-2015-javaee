@@ -1,0 +1,35 @@
+#!/bin/bash
+
+[ -z "${ENV_VARS}" ] && echo "ERROR: No environment variable ENV_VARS defined. Aborting" && exit 1
+[ ! -f "${ENV_VARS}" ] && echo "ERROR: The ENV_VARS does not exist or is not a file. Aborting." && exit 1
+type mvn >/dev/null 2>&1 || { echo >&2 "ERROR: I require 'mvn' but it's not installed. Aborting."; exit 1; }
+
+source ${ENV_VARS}
+
+[ -z "$LOG4J_FILE" ] && echo "ERROR: LOG4J_FILE not defined in ${ENV_VARS}. Aborting" && exit 1
+[ -z "$PROFILE_DIR" ] && echo "ERROR: PROFILE_DIR not defined in ${ENV_VARS}. Aborting" && exit 1
+
+#[ $# -eq 0 ] && echo "ERROR: No parameter provided" && exit 2
+
+
+PROP_FILE=${PROFILE_DIR}/general.properties
+
+URL=$(grep jdbc.url $PROP_FILE | cut -d '=' -f 2)
+HOSTPORT=$(echo $URL |  cut -d '/' -f 3)
+PORT=$(echo $HOSTPORT | cut -d ':' -f 2)
+HOST=$(echo $HOSTPORT | cut -d '\' -f 1)
+DB=$(echo $URL | cut -d '/' -f 4)
+
+USERNAME=$(grep jdbc.username $PROP_FILE | cut -d '=' -f 2)
+PASSWORD=$(grep jdbc.password $PROP_FILE | cut -d '=' -f 2)
+
+SEED_FILE=db/seed-data.sql
+
+[ ! -f $SEED_DATA ] && echo "Seed data not found: $SEED_DATA" && exit 2
+
+export PGPASSWORD=$PASSWORD
+set -x
+psql -h $HOST -p $PORT -U $USERNAME -d $DB -f $SEED_FILE
+
+
+

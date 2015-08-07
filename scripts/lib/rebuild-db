@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+# TODO Check that the WNV is ok
+
+scripts/drop-create-db
+scripts/mvn liquibase:update
+scripts/seed-db

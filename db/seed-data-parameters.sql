@@ -1,0 +1,20 @@
+
+
+INSERT INTO "sys"."parameters" (id,active,description,label,type,value) VALUES (1,1,'','',1,'');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
