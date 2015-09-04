@@ -27,4 +27,14 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return dto;
     }
 
+    @Override
+    public Empleado saveEmpleado(EmpleadoDTO empleadoDTO) {
+        Empleado empleadoEntity = new Empleado();
+        BeanUtils.copyProperties(empleadoDTO, empleadoEntity);
+        entityManager.persist(empleadoEntity);
+        return empleadoEntity;
+    }
+    
+    
+
 }
