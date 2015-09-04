@@ -18,18 +18,23 @@ import py.edu.uca.test.web.dto.EmpleadoDTO;
 @Controller
 public class EmpleadoController {
 
-	protected static final Logger logger = LoggerFactory.getLogger(EmpleadoController.class);
+    protected static final Logger logger = LoggerFactory.getLogger(EmpleadoController.class);
 
-	@Autowired
-	private EmpleadoService empleadoService;
+    @Autowired
+    private EmpleadoService empleadoService;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/api/empleado/{id}")
-	@ResponseStatus(value = HttpStatus.OK)
-	public @ResponseBody ResponseEntity<EmpleadoDTO> getEmpleado(@PathVariable Long id) {
-	    EmpleadoDTO dto = empleadoService.findById(id);
-		ResponseEntity<EmpleadoDTO> retorno = new ResponseEntity<EmpleadoDTO>(dto, HttpStatus.OK);
-		return retorno;
+    @RequestMapping(method = RequestMethod.GET, value = "/api/empleado/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public @ResponseBody ResponseEntity<EmpleadoDTO> getEmpleado(@PathVariable Long id) {
+        ResponseEntity<EmpleadoDTO> retorno;
+        EmpleadoDTO dto = empleadoService.findById(id);
+        if (dto != null && dto.getId() != null) {
+            retorno = new ResponseEntity<EmpleadoDTO>(dto, HttpStatus.OK);
+        } else {
+            retorno = new ResponseEntity<EmpleadoDTO>(dto, HttpStatus.NOT_FOUND);
+        }
+        return retorno;
 
-	}
+    }
 
 }
