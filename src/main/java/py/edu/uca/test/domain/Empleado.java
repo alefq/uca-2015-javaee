@@ -26,6 +26,7 @@ public class Empleado {
     }
 
     @Id
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "empleado_id_seq")
     public Long getId() {
         return id;
@@ -60,7 +61,7 @@ public class Empleado {
     }
     
 
-    @Column(name="numero_de_hijos")
+    @Column(name="nro_de_hijos")
     public Long getNroDeHijos() {
         return nroDeHijos;
     }
