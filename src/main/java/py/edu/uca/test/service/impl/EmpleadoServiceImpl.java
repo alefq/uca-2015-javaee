@@ -1,5 +1,9 @@
 package py.edu.uca.test.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -13,12 +17,16 @@ import py.edu.uca.test.domain.Empleado;
 import py.edu.uca.test.domain.Usuario;
 import py.edu.uca.test.service.EmpleadoService;
 import py.edu.uca.test.web.dto.EmpleadoDTO;
+import py.edu.uca.test.web.repository.EmpleadoRepository;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
+
+    @Resource
+    private EmpleadoRepository empleadoRepository;
 
     public void setEntityManagerFactory(EntityManagerFactory emf) {
         this.entityManagerFactory = emf;
@@ -63,6 +71,19 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             }
         }
         return empleadoEntity;
+    }
+
+    public List<EmpleadoDTO> findByNombre(String name) {
+        List<EmpleadoDTO> dtos = new ArrayList<EmpleadoDTO>();
+        List<Empleado> empleados = empleadoRepository.findByNombre(name);
+        if (empleados != null && !empleados.isEmpty()) {
+            for (Empleado emp : empleados) {
+                EmpleadoDTO dto = new EmpleadoDTO();
+                BeanUtils.copyProperties(emp, dto);
+                dtos.add(dto);
+            }
+        }
+        return dtos;
     }
 
 }

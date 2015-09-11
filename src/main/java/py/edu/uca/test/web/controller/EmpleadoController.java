@@ -1,5 +1,7 @@
 package py.edu.uca.test.web.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import py.edu.uca.test.domain.Empleado;
 import py.edu.uca.test.service.EmpleadoService;
 import py.edu.uca.test.web.dto.EmpleadoDTO;
 import py.edu.uca.test.web.dto.SuccessResponseDTO;
-import py.edu.uca.test.web.dto.UserDTO;
 
 @Controller
 public class EmpleadoController {
@@ -48,7 +49,7 @@ public class EmpleadoController {
         HttpStatus status = HttpStatus.CREATED;
         try {
             Empleado newEmpleado = empleadoService.saveEmpleado(empleadoDTO);
-            if(newEmpleado != null && newEmpleado.getId() != null) {
+            if (newEmpleado != null && newEmpleado.getId() != null) {
                 result.setMessage("Empleado creado con éxito");
             } else {
                 result.setMessage("No se pudo crear el empleado");
@@ -62,4 +63,17 @@ public class EmpleadoController {
         return new ResponseEntity<SuccessResponseDTO>(result, status);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/api/empleado/nombre/{nombreCargo}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public @ResponseBody ResponseEntity<List<EmpleadoDTO>> getEmpleadoByCargo(@PathVariable String nombreCargo) {
+        ResponseEntity<List<EmpleadoDTO>> retorno;
+        List<EmpleadoDTO> lista = empleadoService.findByNombre(nombreCargo);
+        if (lista != null && !lista.isEmpty()) {
+            retorno = new ResponseEntity<List<EmpleadoDTO>>(lista, HttpStatus.OK);
+        } else {
+            retorno = new ResponseEntity<List<EmpleadoDTO>>(lista, HttpStatus.NOT_FOUND);
+        }
+        return retorno;
+
+    }
 }
