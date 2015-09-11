@@ -96,4 +96,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return empleadoEntity;
     }
 
+    @Transactional
+    @Override
+    public void updateEmpleado(EmpleadoDTO dto) {
+        if(dto != null && dto.getId() != null) {
+        Empleado empleadoEntity = empleadoRepository.findOne(dto.getId());
+        BeanUtils.copyProperties(dto, empleadoEntity);
+        } else {
+            throw new RuntimeException("Se necesita un dto válido con ID");
+        }
+     
+    }
 }

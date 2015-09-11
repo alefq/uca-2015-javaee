@@ -76,4 +76,14 @@ public class EmpleadoController {
         return retorno;
 
     }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/empleado")
+    @ResponseStatus(value = HttpStatus.OK)
+    public @ResponseBody ResponseEntity<EmpleadoDTO> updateEmpleado(@RequestBody EmpleadoDTO empleadoDTO) {
+        ResponseEntity<EmpleadoDTO> retorno;
+        empleadoService.updateEmpleado(empleadoDTO);
+        retorno = new ResponseEntity<EmpleadoDTO>(new EmpleadoDTO(), HttpStatus.OK);
+        return retorno;
+
+    }
 }

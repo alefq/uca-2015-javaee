@@ -19,5 +19,7 @@ public interface EmpleadoService {
     Empleado saveEmpleado2(EmpleadoDTO empleadoDTO);
 
     public List<EmpleadoDTO> findByNombre(String name);
+    
+    void updateEmpleado(EmpleadoDTO dto);
 
 }
