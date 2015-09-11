@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import py.edu.uca.test.domain.Empleado;
+import py.edu.uca.test.domain.Usuario;
 import py.edu.uca.test.service.EmpleadoService;
 import py.edu.uca.test.web.dto.EmpleadoDTO;
 
@@ -18,14 +19,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
-    
+
     public void setEntityManagerFactory(EntityManagerFactory emf) {
         this.entityManagerFactory = emf;
     }
 
     private EntityManager getEntityManager() {
-        return  entityManagerFactory.createEntityManager();
+        return entityManagerFactory.createEntityManager();
     }
+
     @Override
     public EmpleadoDTO findById(Long id) {
         EmpleadoDTO dto = new EmpleadoDTO();
@@ -34,36 +36,33 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             System.out.println("empleado: " + empleado.getNombre());
             BeanUtils.copyProperties(empleado, dto);
         }
+        Usuario usuario = getEntityManager().find(Usuario.class, 1l);
+        System.out.println(usuario);
         return dto;
     }
 
     @Override
-    public Empleado saveEmpleado(EmpleadoDTO empleadoDTO) throws PersistenceException{
+    public Empleado saveEmpleado(EmpleadoDTO empleadoDTO) throws PersistenceException {
         Empleado empleadoEntity = new Empleado();
         BeanUtils.copyProperties(empleadoDTO, empleadoEntity);
         EntityManager entityManager = getEntityManager();
         EntityTransaction t = entityManager.getTransaction();
         t.begin();
         try {
-           entityManager.persist(empleadoEntity);
-        }
-        catch (PersistenceException up) {
+            entityManager.persist(empleadoEntity);
+        } catch (PersistenceException up) {
             t.rollback();
             throw up;
-        }
-        finally{
+        } finally {
             try {
-               if(t.isActive())
-               {
+                if (t.isActive()) {
                     t.commit();
-               }
+                }
             } catch (Exception ex) {
-               t.rollback();
+                t.rollback();
             }
         }
         return empleadoEntity;
     }
-    
-    
 
 }
