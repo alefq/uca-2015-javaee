@@ -48,7 +48,7 @@ public class EmpleadoController {
         SuccessResponseDTO result = new SuccessResponseDTO();
         HttpStatus status = HttpStatus.CREATED;
         try {
-            Empleado newEmpleado = empleadoService.saveEmpleado(empleadoDTO);
+            Empleado newEmpleado = empleadoService.saveEmpleado2(empleadoDTO);
             if (newEmpleado != null && newEmpleado.getId() != null) {
                 result.setMessage("Empleado creado con éxito");
             } else {

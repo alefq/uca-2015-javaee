@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.persistence.PersistenceUnit;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,15 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             }
         }
         return dtos;
+    }
+
+    @Transactional
+    @Override
+    public Empleado saveEmpleado2(EmpleadoDTO empleadoDTO) {
+        Empleado empleadoEntity = new Empleado();
+        BeanUtils.copyProperties(empleadoDTO, empleadoEntity);
+        empleadoRepository.save(empleadoEntity);
+        return empleadoEntity;
     }
 
 }

@@ -10,6 +10,13 @@ public interface EmpleadoService {
     EmpleadoDTO findById(Long number);
 
     Empleado saveEmpleado(EmpleadoDTO empleadoDTO);
+    
+    /**
+     * Este utiliza spring data
+     * @param empleadoDTO
+     * @return
+     */
+    Empleado saveEmpleado2(EmpleadoDTO empleadoDTO);
 
     public List<EmpleadoDTO> findByNombre(String name);
 
