@@ -1,5 +1,6 @@
 package py.edu.uca.test.domain;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -78,6 +79,11 @@ public class Persona implements Serializable{
 
     public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+    
+    @Transient
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
     }
     
     
