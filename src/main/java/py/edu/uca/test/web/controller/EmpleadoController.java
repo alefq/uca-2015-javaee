@@ -48,7 +48,12 @@ public class EmpleadoController {
         SuccessResponseDTO result = new SuccessResponseDTO();
         HttpStatus status = HttpStatus.CREATED;
         try {
+            // Esta versión utiliza spring data para persistir un empleado
             Empleado newEmpleado = empleadoService.saveEmpleado2(empleadoDTO);
+            // Esta versión utiliza JPA puro para hacer la persistencia
+            // Empleado newEmpleado2 =
+            // empleadoService.saveEmpleado(empleadoDTO);
+
             if (newEmpleado != null && newEmpleado.getId() != null) {
                 result.setMessage("Empleado creado con éxito");
             } else {

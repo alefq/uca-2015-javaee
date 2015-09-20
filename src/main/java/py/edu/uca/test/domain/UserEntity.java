@@ -42,7 +42,7 @@ public class UserEntity extends SodepEntity {
         this.id = id;
     }
 
-    //    @NotNull
+    // @NotNull
     @Basic
     @Column(name = "mail")
     public String getMail() {
@@ -104,11 +104,16 @@ public class UserEntity extends SodepEntity {
         this.role = role;
     }
 
+    /**
+     * Ejemplo de una propiedad o método Transient que puede agregarse a un
+     * Entity. Se utiliza generalmente para valores calculados.
+     * 
+     * @return
+     */
     @Transient
     public String getFullname() {
         return lastname + ", " + name;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -122,29 +127,14 @@ public class UserEntity extends SodepEntity {
             return false;
         }
         UserEntity rhs = (UserEntity) obj;
-        return new EqualsBuilder()
-                .appendSuper(super.equals(obj))
-                .append(this.id, rhs.id)
-                .append(this.mail, rhs.mail)
-                .append(this.name, rhs.name)
-                .append(this.lastname, rhs.lastname)
-                .append(this.password, rhs.password)
-                .append(this.state, rhs.state)
-                .append(this.role, rhs.role)
-                .isEquals();
+        return new EqualsBuilder().appendSuper(super.equals(obj)).append(this.id, rhs.id).append(this.mail, rhs.mail)
+                .append(this.name, rhs.name).append(this.lastname, rhs.lastname).append(this.password, rhs.password)
+                .append(this.state, rhs.state).append(this.role, rhs.role).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-                .appendSuper(super.hashCode())
-                .append(id)
-                .append(mail)
-                .append(name)
-                .append(lastname)
-                .append(password)
-                .append(state)
-                .append(role)
-                .toHashCode();
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(id).append(mail).append(name).append(lastname)
+                .append(password).append(state).append(role).toHashCode();
     }
 }

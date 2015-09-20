@@ -23,9 +23,16 @@ import py.edu.uca.test.web.repository.EmpleadoRepository;
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
 
+    /**
+     * Si se utiliza JPA puro, es necesario un EntityManagerFactory
+     */
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
 
+    /**
+     * Los repositories de spring-data son casos especiales de Injección de
+     * dependencias. Se utiliza el annotation Resource
+     */
     @Resource
     private EmpleadoRepository empleadoRepository;
 
@@ -33,6 +40,12 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         this.entityManagerFactory = emf;
     }
 
+    /**
+     * Cada vez que se necesita utilizar una instancia del EntityManager, se
+     * invoca el método de creación del EntityManagerFactory
+     * 
+     * @return
+     */
     private EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
     }
@@ -45,8 +58,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             System.out.println("empleado: " + empleado.getNombre());
             BeanUtils.copyProperties(empleado, dto);
         }
-        Usuario usuario = getEntityManager().find(Usuario.class, 1l);
-        System.out.println(usuario);
         return dto;
     }
 
@@ -96,15 +107,36 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return empleadoEntity;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * py.edu.uca.test.service.EmpleadoService#updateEmpleado(py.edu.uca.test.
+     * web.dto.EmpleadoDTO) Este método, utilizando el annotation Transactional
+     * ya le indica al spring framework que necesitamos una transacción. Se
+     * realiza automáticamente si todo fue bien, un commit. Caso contrario se
+     * realiza el rollback. En los casos de actualización, todo lo que se
+     * modifique en un entity traído de la base de datos automáticamente al
+     * terminar la llamada se realiza el update a la base de datos.
+     */
     @Transactional
     @Override
     public void updateEmpleado(EmpleadoDTO dto) {
-        if(dto != null && dto.getId() != null) {
-        Empleado empleadoEntity = empleadoRepository.findOne(dto.getId());
-        BeanUtils.copyProperties(dto, empleadoEntity);
+        if (dto != null && dto.getId() != null) {
+            // Traemos el empleado que queremos modificar.
+            Empleado empleadoEntity = empleadoRepository.findOne(dto.getId());
+            // Actualizamos los datos que provienen en este ejemplo, de la capa
+            // Web.
+            // ****************************************************************
+            // OBSERVACION IMPORTANTE: El copyProperties es una facilidad, NO
+            // garantiza que se van a copiar todas las propiedades
+            // Copiará correctamente los campos que coincidan en nombre y tipo
+            // de dato. El resto, deberá copiarse manualmente.
+            // ****************************************************************
+            BeanUtils.copyProperties(dto, empleadoEntity);
         } else {
             throw new RuntimeException("Se necesita un dto válido con ID");
         }
-     
+
     }
 }

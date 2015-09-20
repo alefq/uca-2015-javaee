@@ -17,11 +17,11 @@ public interface ParameterService {
 
 
     /**
-     * Encontrar por estado
+     * Encontrar por label
      * @param p_goal
      * @return
      */
-    public ParameterDTO findByLabel(String p_goal);
+    public ParameterDTO findByLabel(String pLabel);
 
     /**
      * Actualizar por label

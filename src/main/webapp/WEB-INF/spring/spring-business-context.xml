@@ -1,78 +1,91 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:data="http://www.springframework.org/schema/data/jpa"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:data="http://www.springframework.org/schema/data/jpa" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-    <context:property-placeholder location="file:///${ext.prop.dir}/general.properties"/>
+	<context:property-placeholder
+		location="file:///${ext.prop.dir}/general.properties" />
 
-    <context:component-scan base-package="py.edu.uca.test.service"/>
- 
-    <data:repositories base-package="py.edu.uca.test.web.repository"/>
+	<!-- Esta línea instruye a spring que busque los @Service en el paquete 
+		indicado -->
+	<context:component-scan base-package="py.edu.uca.test.service" />
 
-    <!-- Enable the configuration of transactional behavior based on annotations -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- Indicamos a pring dónde estarán los repository de Spring Data -->
+	<data:repositories base-package="py.edu.uca.test.web.repository" />
 
-    <!-- bean post-processor for JPA annotations -->
-    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+	<!-- Enable the configuration of transactional behavior based on annotations -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="myEmf"/>
-    </bean>
+	<!-- bean post-processor for JPA annotations -->
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
-    <bean id="myEmf"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="myDataSource"/>
-        <property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml"/>
-        <property name="persistenceUnitName" value="uca-spring-test"/>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="database" value="DEFAULT"/>
-                <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
-                <property name="showSql" value="${hibernate.showSql}"/>
-            </bean>
-        </property>
-        <property name="jpaPropertyMap">
-            <map>
-                <entry key="hibernate.hbm2ddl.auto" value="${hibernate.hbmddl_auto:none}"/>
-            </map>
-        </property>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="myEmf" />
+	</bean>
 
-    </bean>
+	<bean id="myEmf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="myDataSource" />
+		<property name="persistenceXmlLocation" value="classpath:/META-INF/persistence.xml" />
+		<property name="persistenceUnitName" value="uca-spring-test" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="database" value="DEFAULT" />
+				<!-- Configuramos el hibernate para que utilize el dialecto para PostgreSQL -->
+				<property name="databasePlatform" value="org.hibernate.dialect.PostgreSQL9Dialect" />
+				<!-- Obtiene del general.properties la propiedad para mostrar o no las 
+					sentencias sql en el log. Si no hay nada definido, utiliza el default "false" 
+					y no se muestran. -->
+				<property name="showSql" value="${hibernate.showSql:false}" />
+			</bean>
+		</property>
+		<property name="jpaPropertyMap">
+			<map>
+				<!-- Obtiene del general.properties la propiedad para generar o no actualizaciones 
+					de DDL a la base de datos. Si no hay nada definido, utiliza el default "none" 
+					no se hace nada con el modelo. Esto NO es recomendado utilizar en producción, 
+					sólo para el ambiente de desarrollo. Requiere que el usuario tenga permisos 
+					de creación/modificación en la Base de Datos -->
+				<entry key="hibernate.hbm2ddl.auto" value="${hibernate.hbmddl_auto:none}" />
+			</map>
+		</property>
 
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="myDataSource"/>
-    </bean>
+	</bean>
 
-    <bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
-          destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driverClass}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="myDataSource" />
+	</bean>
 
-    <!-- We need this bean in this business XML because some parameter are used to enqueue a email send request -->
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="${mail.host}"/>
-        <property name="port" value="${mail.port}"/>
-        <property name="username" value="${mail.username}"/>
-        <property name="password" value="${mail.password}"/>
-        <property name="javaMailProperties">
-            <props>
-                <!-- Use SMTP transport protocol -->
-                <prop key="mail.transport.protocol">${mail.transport.protocol}</prop>
-                <!-- Use SMTP-AUTH to authenticate to SMTP server -->
-                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
-                <!-- Use TLS to encrypt communication with SMTP server -->
-                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
-                <prop key="mail.debug">${mail.debug}</prop>
-            </props>
-        </property>
-    </bean>
+	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClass}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- We need this bean in this business XML because some parameter are used 
+		to enqueue a email send request -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}" />
+		<property name="port" value="${mail.port}" />
+		<property name="username" value="${mail.username}" />
+		<property name="password" value="${mail.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<!-- Use SMTP transport protocol -->
+				<prop key="mail.transport.protocol">${mail.transport.protocol}</prop>
+				<!-- Use SMTP-AUTH to authenticate to SMTP server -->
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<!-- Use TLS to encrypt communication with SMTP server -->
+				<prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+				<prop key="mail.debug">${mail.debug}</prop>
+			</props>
+		</property>
+	</bean>
 
 </beans>

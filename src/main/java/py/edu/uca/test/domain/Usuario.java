@@ -49,6 +49,11 @@ public class Usuario implements Serializable {
         this.passwordkey = passwordkey;
     }
 
+    /**
+     * Ejemplo de una relación (foreign key) a la tabla/entity Persona
+     * 
+     * @return
+     */
     @OneToOne
     @JoinColumn(name = "id")
     public Persona getPersona() {
@@ -62,5 +67,5 @@ public class Usuario implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
 }
