@@ -56,7 +56,7 @@
         <level value="debug"/>
     </logger>
 
-    <logger name="py.edu.uca.test">
+    <logger name="py.edu.uca.demo">
         <level value="debug"/>
     </logger>
 
