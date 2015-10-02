@@ -139,4 +139,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         }
 
     }
+
+    @Override
+    public long count() {
+        return empleadoRepository.count();
+    }
 }

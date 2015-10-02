@@ -5,12 +5,18 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import py.edu.uca.test.service.EmpleadoService;
 
 @Component("demoWorker")
 public class DemoWorker {
 
+    @Autowired
+    private EmpleadoService  empleadoService;
+    
     protected static final Logger logger = LoggerFactory.getLogger(DemoWorker.class);
     private static final AtomicLong counter = new AtomicLong(0);
 
@@ -26,6 +32,8 @@ public class DemoWorker {
         long increment = counter.incrementAndGet();
         logger.info("[" + increment + "] estoy en el worker, fecha: " + now);
         System.out.println("[" + increment + "] estoy en el worker, fecha: " + now);
+        long countEmpleados = empleadoService.count();
+        logger.info("Cantidad de empleados: " + countEmpleados);
     }
 
 }

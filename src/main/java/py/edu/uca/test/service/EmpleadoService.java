@@ -7,7 +7,7 @@ import py.edu.uca.test.web.dto.EmpleadoDTO;
 
 public interface EmpleadoService {
 
-    EmpleadoDTO findById(Long number);
+    EmpleadoDTO findById(Long numScheduledber);
 
     /**
      * Versión con JPA puro, utilizando el EntityManager, abriendo y cerrando
@@ -35,5 +35,7 @@ public interface EmpleadoService {
     public List<EmpleadoDTO> findByNombre(String name);
 
     void updateEmpleado(EmpleadoDTO dto);
+
+    long count();
 
 }
