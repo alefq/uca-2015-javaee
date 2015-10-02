@@ -24,7 +24,7 @@ public class DemoWorker {
     public void processCompositionsFromQueue() {
         Date now = new Date();
         long increment = counter.incrementAndGet();
-        logger.info("[" + increment + "] estoy en el woker, fecha: " + now);
+        logger.info("[" + increment + "] estoy en el worker, fecha: " + now);
       
         }
 
