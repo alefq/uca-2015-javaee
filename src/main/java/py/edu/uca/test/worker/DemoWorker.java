@@ -1,6 +1,7 @@
 package py.edu.uca.test.worker;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import py.edu.uca.test.domain.Empleado;
 import py.edu.uca.test.service.EmpleadoService;
 
 @Component("demoWorker")
@@ -30,10 +32,14 @@ public class DemoWorker {
     public void processCompositionsFromQueue() {
         Date now = new Date();
         long increment = counter.incrementAndGet();
-        logger.info("[" + increment + "] estoy en el worker, fecha: " + now);
-        System.out.println("[" + increment + "] estoy en el worker, fecha: " + now);
+//        logger.info("[" + increment + "] estoy en el worker, fecha: " + now);
+//        System.out.println("[" + increment + "] estoy en el worker, fecha: " + now);
         long countEmpleados = empleadoService.count();
-        logger.info("Cantidad de empleados: " + countEmpleados);
+        List<Empleado> todos = empleadoService.findAll();
+        for(Empleado empleado: todos) {
+            logger.info("Empleado:" + empleado.getNombre());
+        }
+//        logger.info("Cantidad de empleados: " + countEmpleados);
     }
 
 }

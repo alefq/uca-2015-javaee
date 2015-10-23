@@ -11,17 +11,22 @@ import javax.persistence.PersistenceException;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import py.edu.uca.test.domain.Empleado;
 import py.edu.uca.test.domain.Usuario;
 import py.edu.uca.test.service.EmpleadoService;
+import py.edu.uca.test.web.controller.EmpleadoController;
 import py.edu.uca.test.web.dto.EmpleadoDTO;
 import py.edu.uca.test.web.repository.EmpleadoRepository;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
+
+    protected static final Logger logger = LoggerFactory.getLogger(EmpleadoServiceImpl.class);
 
     /**
      * Si se utiliza JPA puro, es necesario un EntityManagerFactory
@@ -53,9 +58,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Override
     public EmpleadoDTO findById(Long id) {
         EmpleadoDTO dto = new EmpleadoDTO();
+        logger.warn("Viernes menos cuarto");
         Empleado empleado = getEntityManager().find(Empleado.class, id);
         if (empleado != null) {
-            System.out.println("empleado: " + empleado.getNombre());
+           logger.debug("empleado: " + empleado.getNombre());
             BeanUtils.copyProperties(empleado, dto);
         }
         return dto;
@@ -143,5 +149,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Override
     public long count() {
         return empleadoRepository.count();
+    }
+    
+    @Override
+    public List<Empleado> findAll() {
+        // TODO Auto-generated method stub
+        return empleadoRepository.findAll();
     }
 }

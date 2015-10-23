@@ -38,4 +38,6 @@ public interface EmpleadoService {
 
     long count();
 
+    List<Empleado> findAll();
+
 }

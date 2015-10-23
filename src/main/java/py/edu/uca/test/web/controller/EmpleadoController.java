@@ -34,8 +34,10 @@ public class EmpleadoController {
         ResponseEntity<EmpleadoDTO> retorno;
         EmpleadoDTO dto = empleadoService.findById(id);
         if (dto != null && dto.getId() != null) {
+            logger.debug("Encontrado el empleado con id: ." + id);
             retorno = new ResponseEntity<EmpleadoDTO>(dto, HttpStatus.OK);
         } else {
+            logger.error("No se encontró el empleado con id: ." + id);
             retorno = new ResponseEntity<EmpleadoDTO>(dto, HttpStatus.NOT_FOUND);
         }
         return retorno;
